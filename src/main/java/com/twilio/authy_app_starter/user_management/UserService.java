@@ -1,4 +1,4 @@
-package com.ehizman.authy_app_starter.user_management;
+package com.twilio.authy_app_starter.user_management;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

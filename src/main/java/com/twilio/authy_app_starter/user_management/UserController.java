@@ -1,4 +1,4 @@
-package com.ehizman.authy_app_starter.user_management;
+package com.twilio.authy_app_starter.user_management;
 
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class UserController {
-    private UserService userService;
     private Logger log = LoggerFactory.getLogger(UserController.class);
+
+    private UserService userService;
     private AuthenticationManager authenticationManager;
 
     public UserController(UserService userService, AuthenticationManager authenticationManager) {

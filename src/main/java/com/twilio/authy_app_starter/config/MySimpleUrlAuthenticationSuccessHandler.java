@@ -1,4 +1,4 @@
-package com.ehizman.authy_app_starter.config;
+package com.twilio.authy_app_starter.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
