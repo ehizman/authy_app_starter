@@ -1,4 +1,4 @@
-package com.ehizman.authy_app_starter;
+package com.twilio.authy_app_starter;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
