@@ -3,8 +3,10 @@ package com.twilio.authy_app_starter.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,9 +32,10 @@ public class AppSecurityConfig {
     @Bean
     public SecurityFilterChain configure(final HttpSecurity http) throws Exception {
         return http.cors(withDefaults())
-                .csrf(withDefaults())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/signup").permitAll()
+                        .requestMatchers("/signup", "/h2-console/**").permitAll()
                         .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
