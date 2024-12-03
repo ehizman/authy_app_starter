@@ -1,12 +1,11 @@
 package com.twilio.authy_app_starter.user_management;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-
-@Repository
-public interface UserRepository extends MongoRepository<AppUser, String > {
+public interface UserRepository extends JpaRepository<AppUser, Long> {
+    @Query("select ap from AppUser ap where username = ?1")
     Optional<AppUser> findAppUserByUsername(String username);
 }
