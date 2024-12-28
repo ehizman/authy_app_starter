@@ -1,10 +1,13 @@
 package com.twilio.authy_app_starter.config;
 
+import com.twilio.authy_app_starter.user_management.AppUser;
+import com.twilio.authy_app_starter.user_management.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -22,6 +25,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private Logger log = LoggerFactory.getLogger(MySimpleUrlAuthenticationSuccessHandler.class);
+    @Autowired
+    private UserService userService;
 
 
     @Override
@@ -47,9 +52,17 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     protected String determineTargetUrl(final Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String authenticatedUser = userDetails.getUsername();
-        Model model = new ConcurrentModel();
-        model.addAttribute("username", authenticatedUser);
-        return "dashboard";
+        AppUser user = userService.findUserByUsername(authenticatedUser);
+        if (user.get_2faFactorSid() == null){
+            log.info("User has not created factor");
+            return "/setup-2fa";
+        } else if (user.get_2faFactorSid() != null && !user.isI2FAEnabled()) {
+            log.info("User has created factor but has not verified factor");
+            return "/verify-factor";
+        } else{
+            log.info("User has verified factor");
+            return "/verify-token";
+        }
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request) {
